@@ -1,3 +1,4 @@
+import asyncio
 import os
 import logging
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
@@ -53,7 +54,7 @@ async def websocket_endpoint(websocket: WebSocket):
                 continue
 
             log.info("Command: %s", direction)
-            serial_bridge.send(direction)
+            await asyncio.to_thread(serial_bridge.send, direction)
             await websocket.send_json({"ok": True, "direction": direction})
 
     except WebSocketDisconnect:

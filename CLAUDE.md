@@ -33,6 +33,7 @@ Building an RC robot with servo-based steering, controlled via a React web app o
 4. Local network test — control robot from phone on same Wi-Fi
 5. Add remote tunnel — ngrok or Cloudflare for demo access
 6. (Stretch) Deploy frontend to Vercel/Netlify, point at tunneled backend
+7. (Stretch) Create udev rule on Pi to give Arduino a stable device name (currently /dev/ttyACM0 can change on reconnect)
 
 ## Key Decisions
 - Use **WebSockets** over HTTP polling for real-time control feel

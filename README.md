@@ -43,7 +43,7 @@ sudo apt update && sudo apt install -y git python3-venv
 
 # Clone the repo
 git clone <your-repo-url> remote-robot
-cd remote-robot/backend
+cd rcrobot/backend
 
 # Create virtualenv and install deps
 python3 -m venv .venv
@@ -59,7 +59,7 @@ cp .env.example .env
 
 ```bash
 ssh pi@<pi-ip-address>
-cd remote-robot/backend
+cd rcrobot/backend
 source .venv/bin/activate
 uvicorn main:app --host 0.0.0.0 --port 8000
 ```
