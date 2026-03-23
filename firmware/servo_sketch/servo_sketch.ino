@@ -3,7 +3,7 @@
 Servo myservo;
 const int servoPin = 7;
 const int NEUTRAL = 90;
-const int STEP = 2;
+const int STEP = 5;
 const int LOOP_DELAY = 20;
 
 int currentPos = NEUTRAL;
@@ -17,14 +17,16 @@ void setup() {
 
 void loop() {
   if (Serial.available() > 0) {
-    command = Serial.read();
-    while (Serial.available() > 0) Serial.read();
+    char c = Serial.read();
+    if (c == 'L' || c == 'R' || c == 'S') {
+      command = c;
+    }
   }
 
   if (command == 'L') {
-    currentPos = max(0, currentPos - STEP);
+    currentPos = max(0, currentPos + STEP);
   } else if (command == 'R') {
-    currentPos = min(180, currentPos + STEP);
+    currentPos = min(180, currentPos - STEP);
   } else {
     if (currentPos < NEUTRAL) currentPos = min(NEUTRAL, currentPos + STEP);
     else if (currentPos > NEUTRAL) currentPos = max(NEUTRAL, currentPos - STEP);

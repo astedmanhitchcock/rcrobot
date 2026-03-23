@@ -4,40 +4,35 @@ const WS_URL = import.meta.env.VITE_WS_URL ?? 'ws://localhost:5173/ws'
 
 export function useWebSocket() {
   const wsRef = useRef(null)
-  const isMounted = useRef(true)
   const [status, setStatus] = useState('connecting')
 
-  const connect = useCallback(() => {
-    if (!isMounted.current) return
-
-    setStatus('connecting')
-    const ws = new WebSocket(WS_URL)
-    wsRef.current = ws
-
-    ws.onopen = () => {
-      if (isMounted.current) setStatus('open')
-    }
-
-    ws.onerror = () => {
-      // onerror is always followed by onclose; handle reconnect there
-    }
-
-    ws.onclose = () => {
-      if (!isMounted.current) return
-      setStatus('closed')
-      setTimeout(connect, 2000)
-    }
-  }, [])
-
   useEffect(() => {
-    isMounted.current = true
+    let cancelled = false
+
+    function connect() {
+      if (cancelled) return
+      setStatus('connecting')
+      const ws = new WebSocket(WS_URL)
+      wsRef.current = ws
+
+      ws.onopen = () => {
+        if (!cancelled) setStatus('open')
+      }
+
+      ws.onclose = () => {
+        if (cancelled) return
+        setStatus('closed')
+        setTimeout(connect, 2000)
+      }
+    }
+
     connect()
 
     return () => {
-      isMounted.current = false
+      cancelled = true
       wsRef.current?.close()
     }
-  }, [connect])
+  }, [])
 
   const sendDirection = useCallback((direction) => {
     const ws = wsRef.current
