@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 
 const WS_URL = import.meta.env.VITE_WS_URL ?? 'ws://localhost:5173/ws'
+const WS_TOKEN = import.meta.env.VITE_WS_TOKEN
+
+function buildWsUrl() {
+  return WS_TOKEN ? `${WS_URL}?token=${WS_TOKEN}` : WS_URL
+}
 
 export function useWebSocket() {
   const wsRef = useRef(null)
@@ -12,7 +17,7 @@ export function useWebSocket() {
     function connect() {
       if (cancelled) return
       setStatus('connecting')
-      const ws = new WebSocket(WS_URL)
+      const ws = new WebSocket(buildWsUrl())
       wsRef.current = ws
 
       ws.onopen = () => {

@@ -1,7 +1,7 @@
 import asyncio
 import os
 import logging
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Query
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
@@ -12,11 +12,14 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 log = logging.getLogger(__name__)
 
+WS_TOKEN = os.getenv("WS_TOKEN")
+ALLOWED_ORIGIN = os.getenv("ALLOWED_ORIGIN", "*")
+
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[ALLOWED_ORIGIN],
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -40,7 +43,10 @@ async def shutdown():
 
 
 @app.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket):
+async def websocket_endpoint(websocket: WebSocket, token: str = Query(default=None)):
+    if WS_TOKEN and token != WS_TOKEN:
+        await websocket.close(code=4001)
+        return
     await websocket.accept()
     log.info("Client connected: %s", websocket.client)
     try:

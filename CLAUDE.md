@@ -9,13 +9,13 @@ Building an RC robot with servo-based steering, controlled via a React web app o
 - [x] React frontend controller UI
 - [ ] Hardware bridge (servo sketch ↔ backend) — serial_bridge.py ready, needs COMMAND_MAP tuned to sketch
 - [ ] Local network test (phone as controller)
-- [ ] Remote access via tunnel (ngrok / Cloudflare)
+- [x] Token auth + CORS locking added to backend and frontend
+- [ ] Cloudflare Tunnel running on Pi + Vercel deployment (code ready, needs deploy)
 
 ## Architecture
 
 ```
-[React Web App]  ──WebSocket──>  [Backend Server on Robot]  ──Serial/GPIO──>  [Servo Controller]
-   (Vite)                         (FastAPI or Express)                          (Arduino/ESP32)
+[Vercel Frontend] ──wss://──> [Cloudflare Tunnel] ──> [Pi Backend :8000] ──serial──> [Arduino]
 ```
 
 ## Tech Stack
@@ -27,12 +27,12 @@ Building an RC robot with servo-based steering, controlled via a React web app o
 - **Deployment (remote)**: ngrok or Cloudflare Tunnel + Vercel/Netlify for frontend
 
 ## Roadmap (Ordered)
-1. Stand up backend server — receives commands, logs them to console
-2. Build React UI — D-pad / joystick that sends commands on press/hold
+1. ~~Stand up backend server~~ ✓
+2. ~~Build React UI~~ ✓
 3. Wire servo sketch into backend — translate commands to serial/GPIO signals
 4. Local network test — control robot from phone on same Wi-Fi
-5. Add remote tunnel — ngrok or Cloudflare for demo access
-6. (Stretch) Deploy frontend to Vercel/Netlify, point at tunneled backend
+5. ~~Add token auth + lock CORS~~ ✓
+6. Deploy: install cloudflared on Pi, run tunnel; deploy frontend to Vercel with env vars
 7. (Stretch) Create udev rule on Pi to give Arduino a stable device name (currently /dev/ttyACM0 can change on reconnect)
 
 ## Key Decisions
