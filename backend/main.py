@@ -1,8 +1,10 @@
 import asyncio
 import os
 import logging
+import cv2
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Query
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from dotenv import load_dotenv
 
 from serial_bridge import SerialBridge
@@ -37,9 +39,35 @@ async def startup():
     serial_bridge.connect()
 
 
+camera = cv2.VideoCapture(int(os.getenv("CAMERA_INDEX", "0")))
+
+
 @app.on_event("shutdown")
 async def shutdown():
     serial_bridge.disconnect()
+    camera.release()
+
+
+def generate_frames():
+    while True:
+        success, frame = camera.read()
+        if not success:
+            break
+        _, buffer = cv2.imencode(".jpg", frame)
+        yield (
+            b"--frame\r\n"
+            b"Content-Type: image/jpeg\r\n\r\n"
+            + buffer.tobytes()
+            + b"\r\n"
+        )
+
+
+@app.get("/video_feed")
+def video_feed():
+    return StreamingResponse(
+        generate_frames(),
+        media_type="multipart/x-mixed-replace; boundary=frame",
+    )
 
 
 @app.websocket("/ws")

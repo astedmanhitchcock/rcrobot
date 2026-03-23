@@ -42,6 +42,16 @@ body {
 .status-closed { background: #4d1a1a; color: #f87171; }
 .status-connecting { background: #4d3a1a; color: #fbbf24; }
 
+.video-feed {
+  width: 100%;
+  max-width: 480px;
+  border-radius: 12px;
+  border: 2px solid #333;
+  background: #000;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
 .last-command {
   font-size: 0.8rem;
   color: #888;
