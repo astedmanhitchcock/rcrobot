@@ -71,7 +71,6 @@ body {
 .dpad {
   display: grid;
   grid-template-columns: repeat(3, 96px);
-  grid-template-rows: repeat(3, 96px);
   gap: 6px;
 }
 
@@ -111,6 +110,8 @@ body {
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;
+  width: 100%;
+  aspect-ratio: 1 / 1;
   transition:
     background 0.08s,
     transform 0.08s;
