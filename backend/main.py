@@ -49,10 +49,18 @@ async def shutdown():
 
 
 def generate_frames():
+    consecutive_failures = 0
+    max_failures = 10
     while True:
         success, frame = camera.read()
         if not success:
-            break
+            consecutive_failures += 1
+            log.warning("Camera read failed (%d/%d)", consecutive_failures, max_failures)
+            if consecutive_failures >= max_failures:
+                log.error("Camera unrecoverable, closing stream")
+                break
+            continue
+        consecutive_failures = 0
         _, buffer = cv2.imencode(".jpg", frame)
         yield (
             b"--frame\r\n"
