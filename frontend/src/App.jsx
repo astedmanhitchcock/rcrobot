@@ -16,7 +16,7 @@ export default function App() {
 
   return (
     <div className="app">
-      <h1 className="title">RC Robot</h1>
+      <h1 className="title">RC Robot!</h1>
       <div className={`status-badge status-${status}`}>{status}</div>
       <img className="video-feed" src={VIDEO_URL} alt="Robot cam" />
       <DPad onCommand={handleCommand} />
