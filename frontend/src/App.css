@@ -28,6 +28,12 @@ body {
   letter-spacing: 0.05em;
 }
 
+.subtitle {
+  font-size: 0.9rem;
+  color: #888;
+  letter-spacing: 0.05em;
+}
+
 .status-badge {
   font-size: 0.75rem;
   font-weight: 600;

@@ -17,6 +17,7 @@ export default function App() {
   return (
     <div className="app">
       <h1 className="title">uEye</h1>
+      <h2 className="subtitle">The future of the internet is handmade</h2>
       <div className={`status-badge status-${status}`}>{status}</div>
       <img className="video-feed" src={VIDEO_URL} alt="Robot cam" />
       <p>Press and hold left or right to make the eye look in that direction</p>
