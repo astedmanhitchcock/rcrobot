@@ -1,6 +1,7 @@
 import asyncio
 import os
 import logging
+import time
 import cv2
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Query
 from fastapi.middleware.cors import CORSMiddleware
@@ -85,6 +86,10 @@ async def websocket_endpoint(websocket: WebSocket, token: str = Query(default=No
         return
     await websocket.accept()
     log.info("Client connected: %s", websocket.client)
+    last_command = None
+    last_command_time = 0.0
+    debounce_seconds = 0.05
+
     try:
         while True:
             data = await websocket.receive_json()
@@ -94,6 +99,13 @@ async def websocket_endpoint(websocket: WebSocket, token: str = Query(default=No
                 log.warning("Invalid command received: %s", data)
                 await websocket.send_json({"error": f"invalid direction: {direction}"})
                 continue
+
+            now = time.monotonic()
+            if direction != "stop" and direction == last_command and (now - last_command_time) < debounce_seconds:
+                continue
+
+            last_command = direction
+            last_command_time = now
 
             log.info("Command: %s", direction)
             await asyncio.to_thread(serial_bridge.send, direction)

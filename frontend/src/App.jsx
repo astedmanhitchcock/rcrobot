@@ -16,10 +16,10 @@ export default function App() {
 
   return (
     <div className="app">
-      <h1 className="title">RC Robot</h1>
+      <h1 className="title">uEye</h1>
       <div className={`status-badge status-${status}`}>{status}</div>
       <img className="video-feed" src={VIDEO_URL} alt="Robot cam" />
-      <p>Press and hold left or right to pan the sphere to its left or right</p>
+      <p>Press and hold left or right to make the eye look in that direction</p>
       <DPad onCommand={handleCommand} />
       {lastCommand && <div className="last-command">last: {lastCommand}</div>}
     </div>

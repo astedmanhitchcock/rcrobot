@@ -24,9 +24,9 @@ void loop() {
   }
 
   if (command == 'L') {
-    currentPos = max(0, currentPos + STEP);
+    currentPos = min(180, currentPos + STEP);
   } else if (command == 'R') {
-    currentPos = min(180, currentPos - STEP);
+    currentPos = max(0, currentPos - STEP);
   } else {
     if (currentPos < NEUTRAL) currentPos = min(NEUTRAL, currentPos + STEP);
     else if (currentPos > NEUTRAL) currentPos = max(NEUTRAL, currentPos - STEP);
