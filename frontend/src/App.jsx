@@ -6,7 +6,14 @@ import "./App.css";
 const VIDEO_URL = `${import.meta.env.VITE_API_URL ?? "http://localhost:8000"}/video_feed`;
 
 export default function App() {
-  const { sendDirection, status, sessionState, joinQueue, leaveQueue, keepControl } = useWebSocket();
+  const {
+    sendDirection,
+    status,
+    sessionState,
+    joinQueue,
+    leaveQueue,
+    keepControl,
+  } = useWebSocket();
   const [lastCommand, setLastCommand] = useState(null);
   const { role, queuePosition, queueLength, idleCountdown } = sessionState;
 
@@ -16,7 +23,7 @@ export default function App() {
   }
 
   const waitingCount = Math.max(0, queueLength - 1);
-
+  console.log("disabled?", role === "observer" || role === "queued");
   return (
     <div className="app">
       <h1 className="title">uEye</h1>
@@ -30,7 +37,8 @@ export default function App() {
             <p className="queue-status">You&apos;re in control</p>
             {waitingCount > 0 && (
               <p className="queue-count">
-                {waitingCount} {waitingCount === 1 ? "person" : "people"} waiting
+                {waitingCount} {waitingCount === 1 ? "person" : "people"}{" "}
+                waiting
               </p>
             )}
             <button className="queue-btn queue-btn-leave" onClick={leaveQueue}>
@@ -53,7 +61,8 @@ export default function App() {
             </p>
             {queueLength > 0 && (
               <p className="queue-count">
-                {waitingCount} {waitingCount === 1 ? "person" : "people"} waiting
+                {waitingCount} {waitingCount === 1 ? "person" : "people"}{" "}
+                waiting
               </p>
             )}
             <button className="queue-btn queue-btn-join" onClick={joinQueue}>
@@ -64,7 +73,10 @@ export default function App() {
       </div>
 
       <p>Press and hold left or right to make the eye look in that direction</p>
-      <DPad onCommand={handleCommand} disabled={role === "observer" || role === "queued"} />
+      <DPad
+        onCommand={handleCommand}
+        disabled={role === "observer" || role === "queued"}
+      />
       {lastCommand && role === "controller" && (
         <div className="last-command">last: {lastCommand}</div>
       )}
@@ -75,10 +87,16 @@ export default function App() {
             <p className="idle-title">Still there?</p>
             <p className="idle-countdown">Losing control in {idleCountdown}s</p>
             <div className="idle-actions">
-              <button className="queue-btn queue-btn-join" onClick={keepControl}>
+              <button
+                className="queue-btn queue-btn-join"
+                onClick={keepControl}
+              >
                 Keep Control
               </button>
-              <button className="queue-btn queue-btn-leave" onClick={leaveQueue}>
+              <button
+                className="queue-btn queue-btn-leave"
+                onClick={leaveQueue}
+              >
                 Give Up
               </button>
             </div>

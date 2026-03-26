@@ -213,6 +213,9 @@ async def websocket_endpoint(websocket: WebSocket, token: str = Query(default=No
                 async with session_lock:
                     if client_id not in queue:
                         queue.append(client_id)
+                        if controller_id is None:
+                            controller_id = queue[0]
+                            _reset_idle_task(controller_id)
                         await _send_state_to_all()
 
             elif msg_type == "leave_queue":
