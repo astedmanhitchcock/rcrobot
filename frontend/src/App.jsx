@@ -23,7 +23,7 @@ export default function App() {
   }
 
   const waitingCount = Math.max(0, queueLength - 1);
-  console.log("disabled?", role === "observer" || role === "queued");
+
   return (
     <div className="app">
       <h1 className="title">uEye</h1>
