@@ -15,11 +15,15 @@ export default function App() {
     keepControl,
   } = useWebSocket();
   const [lastCommand, setLastCommand] = useState(null);
+  const [mirrored, setMirrored] = useState(false);
   const { role, queuePosition, queueLength, idleCountdown } = sessionState;
 
   function handleCommand(direction) {
-    sendDirection(direction);
-    setLastCommand(direction);
+    let cmd = direction;
+    if (mirrored && direction === "left") cmd = "right";
+    else if (mirrored && direction === "right") cmd = "left";
+    sendDirection(cmd);
+    setLastCommand(cmd);
   }
 
   const waitingCount = Math.max(0, queueLength - 1);
@@ -77,6 +81,17 @@ export default function App() {
         onCommand={handleCommand}
         disabled={role === "observer" || role === "queued"}
       />
+      <div className="mirror-toggle">
+        <span className="mirror-label">Confused? Should it be mirrored?</span>
+        <label className="toggle">
+          <input
+            type="checkbox"
+            checked={mirrored}
+            onChange={e => setMirrored(e.target.checked)}
+          />
+          <span className="toggle-track" />
+        </label>
+      </div>
       {lastCommand && role === "controller" && (
         <div className="last-command">last: {lastCommand}</div>
       )}
