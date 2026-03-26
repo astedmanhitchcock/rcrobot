@@ -1,3 +1,6 @@
+const btnClass =
+  "flex items-center justify-center text-3xl bg-[#2a2a2a] text-[#ccc] border-2 border-[#444] rounded-xl cursor-pointer touch-none select-none w-full aspect-square transition-all duration-75 active:bg-[#3a5a3a] active:text-white active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed";
+
 export function DPad({ onCommand, disabled = false }) {
   function makeHandlers(direction) {
     if (disabled) return {};
@@ -16,24 +19,24 @@ export function DPad({ onCommand, disabled = false }) {
   }
 
   return (
-    <div className={`dpad${disabled ? " dpad-disabled" : ""}`}>
-      {/* <button className="dpad-up" {...makeHandlers('forward')}>▲</button> */}
+    <div className="grid [grid-template-columns:repeat(3,6rem)] gap-1.5">
+      {/* <button className={`col-start-2 row-start-1 ${btnClass}`} {...makeHandlers('forward')}>▲</button> */}
       <button
-        className="dpad-left"
+        className={`col-start-1 row-start-2 ${btnClass}`}
         disabled={disabled}
         {...makeHandlers("left")}
       >
         ◀
       </button>
-      <div className="dpad-center" />
+      <div className="col-start-2 row-start-2 bg-[#222] rounded-xl" />
       <button
-        className="dpad-right"
+        className={`col-start-3 row-start-2 ${btnClass}`}
         disabled={disabled}
         {...makeHandlers("right")}
       >
         ▶
       </button>
-      {/* <button className="dpad-down" {...makeHandlers('backward')}>▼</button> */}
+      {/* <button className={`col-start-2 row-start-3 ${btnClass}`} {...makeHandlers('backward')}>▼</button> */}
     </div>
   );
 }
